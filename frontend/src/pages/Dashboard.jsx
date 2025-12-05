@@ -35,6 +35,9 @@ const Dashboard = () => {
   const fetchSecrets = async () => {
     try {
       console.log('📥 Fetching secrets from API...');
+      console.log('🔑 Current token:', localStorage.getItem('token') ? 'EXISTS' : 'MISSING');
+      console.log('🔑 Axios auth header:', axios.defaults.headers.common['Authorization'] ? 'SET' : 'NOT SET');
+      
       const response = await axios.get('/api/vault');
       console.log('✅ Secrets fetched:', response.data);
       setSecrets(response.data);

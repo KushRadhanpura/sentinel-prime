@@ -13,12 +13,19 @@ import Settings from './pages/Settings';
 import TwoFactorSetup from './pages/TwoFactorSetup';
 
 function App() {
-  const { isAuthenticated, loadUser } = useAuthStore();
+  const { isAuthenticated, loadUser, token } = useAuthStore();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log('🚀 App initializing...');
+    console.log('🔑 Token in store:', token ? 'EXISTS' : 'NONE');
+    console.log('🔐 Is authenticated:', isAuthenticated);
+    
     // Try to load the user from the token in local storage
-    loadUser().finally(() => setLoading(false));
+    loadUser().finally(() => {
+      console.log('✅ User load complete');
+      setLoading(false);
+    });
   }, [loadUser]);
 
   if (loading) {

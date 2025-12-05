@@ -20,14 +20,20 @@ const LoginPage = () => {
     clearError();
 
     try {
+      console.log('🔐 Submitting auth form...', isLogin ? 'LOGIN' : 'REGISTER');
+      
       if (isLogin) {
-        await login({ email: formData.email, password: formData.password });
+        const result = await login({ email: formData.email, password: formData.password });
+        console.log('✅ Login successful, result:', result);
       } else {
-        await register(formData);
+        const result = await register(formData);
+        console.log('✅ Register successful, result:', result);
       }
+      
+      console.log('📍 Navigating to dashboard...');
       navigate('/dashboard');
     } catch (err) {
-      console.error('Auth error:', err);
+      console.error('❌ Auth error:', err);
     }
   };
 

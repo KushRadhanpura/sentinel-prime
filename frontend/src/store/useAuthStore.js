@@ -4,9 +4,16 @@ import axios from 'axios';
 // ✅ FIXED: We define the Live Backend URL here
 const API_URL = 'https://sentinel-prime-1a28.onrender.com';
 
+// Initialize token from localStorage on app start
+const storedToken = localStorage.getItem('token');
+if (storedToken) {
+  axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
+  console.log('🔐 Token found in localStorage and set in axios headers');
+}
+
 const useAuthStore = create((set, get) => ({
   user: null,
-  token: localStorage.getItem('token') || null,
+  token: storedToken || null,
   isAuthenticated: false,
   isLoading: false,
   error: null,
@@ -16,9 +23,11 @@ const useAuthStore = create((set, get) => ({
     if (token) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       localStorage.setItem('token', token);
+      console.log('✅ Token set in axios headers and localStorage');
     } else {
       delete axios.defaults.headers.common['Authorization'];
       localStorage.removeItem('token');
+      console.log('🗑️ Token removed from axios headers and localStorage');
     }
   },
 
@@ -70,28 +79,41 @@ const useAuthStore = create((set, get) => ({
 
   // Load user from token
   loadUser: async () => {
-    const token = get().token;
+    const token = get().token || localStorage.getItem('token');
     if (!token) {
-      set({ isLoading: false });
+      console.log('ℹ️ No token found, skipping user load');
+      set({ isLoading: false, isAuthenticated: false });
       return;
     }
 
     console.log('🔐 Loading user with token...');
-    get().setAuthHeader(token);
+    // Ensure token is set in axios headers
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     
     try {
-      // ✅ FIXED: Using full Render URL
       const response = await axios.get(`${API_URL}/api/auth/profile`);
-      console.log('✅ User loaded successfully:', response.data);
-      set({ user: response.data, isAuthenticated: true, isLoading: false });
+      console.log('✅ User loaded successfully:', response.data.username);
+      set({ 
+        user: response.data, 
+        token,
+        isAuthenticated: true, 
+        isLoading: false 
+      });
     } catch (error) {
-      console.error('❌ Failed to load user:', error.response?.status, error.response?.data);
-      // Only logout if token is invalid (401), not on network errors
+      console.error('❌ Failed to load user:', error.response?.status, error.response?.data?.message);
+      // Only logout on 401 (invalid token)
       if (error.response?.status === 401) {
-        console.log('🔓 Token invalid, logging out...');
-        get().logout();
+        console.log('🔓 Token expired/invalid, clearing auth...');
+        localStorage.removeItem('token');
+        delete axios.defaults.headers.common['Authorization'];
+        set({ 
+          user: null, 
+          token: null, 
+          isAuthenticated: false, 
+          isLoading: false 
+        });
       } else {
-        console.log('⚠️ Network error, keeping token for retry');
+        console.log('⚠️ Network error, keeping current auth state');
         set({ isLoading: false });
       }
     }
