@@ -50,22 +50,30 @@ const LoginPage = () => {
         className="text-center mb-8"
       >
         <div className="flex items-center justify-center mb-3">
-          <motion.div
-            animate={{ rotateZ: 360 }}
-            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-            className="drop-shadow-[0_0_15px_rgba(34,211,238,0.8)]"
+          <motion.h1
+            animate={{ 
+              y: [0, -10, 0],
+              textShadow: [
+                "0 0 20px rgba(255,255,255,0.5)",
+                "0 0 40px rgba(255,255,255,0.8)",
+                "0 0 20px rgba(255,255,255,0.5)"
+              ]
+            }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            className="text-4xl md:text-5xl font-bold text-white tracking-wider mr-4"
+            style={{ textShadow: "0 0 20px rgba(255,255,255,0.5)" }}
           >
-            <Shield className="w-10 h-10 text-cyan-400" />
-          </motion.div>
-          <h1 className="text-4xl md:text-5xl font-bold text-white tracking-wider mx-4 drop-shadow-[0_0_20px_rgba(255,255,255,0.5)]">
             SENTINEL PRIME
-          </h1>
+          </motion.h1>
           <motion.div
-            animate={{ rotateZ: 360 }}
-            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-            className="drop-shadow-[0_0_15px_rgba(34,211,238,0.8)]"
+            animate={{ rotateY: 360 }}
+            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+            style={{ 
+              perspective: "1000px",
+              filter: "drop-shadow(0 0 20px rgba(192,192,192,0.9)) drop-shadow(0 0 40px rgba(255,255,255,0.6))"
+            }}
           >
-            <Shield className="w-10 h-10 text-cyan-400" />
+            <Shield className="w-12 h-12 text-silver" />
           </motion.div>
         </div>
         <p className="text-cyan-400 text-lg drop-shadow-[0_0_10px_rgba(34,211,238,0.6)]">Military-Grade Secure Vault</p>
