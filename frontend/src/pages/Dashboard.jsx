@@ -11,6 +11,7 @@ const Dashboard = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [revealedSecrets, setRevealedSecrets] = useState({});
   const [scanningSecret, setScanningSecret] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
   const [stats, setStats] = useState({
     total: 0,
     weak: 0,
@@ -49,8 +50,20 @@ const Dashboard = () => {
 
   const handleCreateSecret = async (e) => {
     e.preventDefault();
+    
+    console.log('🔵 Form submitted - Starting encryption process...');
+    console.log('📝 Form data:', formData);
+    
+    setSubmitting(true);
+    
     try {
       const tags = formData.tags.split(',').map(t => t.trim()).filter(Boolean);
+      
+      console.log('📤 Sending to API:', {
+        ...formData,
+        tags,
+      });
+      
       const response = await axios.post('/api/vault', {
         ...formData,
         tags,
@@ -76,6 +89,8 @@ const Dashboard = () => {
       console.error('❌ Failed to create secret:', error);
       console.error('Error details:', error.response?.data || error.message);
       alert(`❌ Error: ${error.response?.data?.message || error.message || 'Failed to create secret. Please try again.'}`);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -627,9 +642,17 @@ const Dashboard = () => {
                   <div className="flex space-x-4 pt-4">
                     <button
                       type="submit"
-                      className="flex-1 btn-gold"
+                      disabled={submitting}
+                      className="flex-1 btn-gold disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      ENCRYPT & STORE
+                      {submitting ? (
+                        <span className="flex items-center justify-center">
+                          <div className="w-5 h-5 border-2 border-dark border-t-transparent rounded-full animate-spin mr-2"></div>
+                          ENCRYPTING...
+                        </span>
+                      ) : (
+                        'ENCRYPT & STORE'
+                      )}
                     </button>
                     <button
                       type="button"
