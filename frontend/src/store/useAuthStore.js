@@ -1,9 +1,6 @@
 import { create } from 'zustand';
 import axios from 'axios';
 
-// ✅ FIXED: We define the Live Backend URL here
-const API_URL = 'https://sentinel-prime-1a28.onrender.com';
-
 // Initialize token from localStorage on app start
 const storedToken = localStorage.getItem('token');
 if (storedToken) {
@@ -35,8 +32,7 @@ const useAuthStore = create((set, get) => ({
   register: async (userData) => {
     set({ isLoading: true, error: null });
     try {
-      // ✅ FIXED: Using full Render URL
-      const response = await axios.post(`${API_URL}/api/auth/register`, userData);
+      const response = await axios.post('/api/auth/register', userData);
       const { token, ...user } = response.data;
       
       get().setAuthHeader(token);
@@ -54,8 +50,7 @@ const useAuthStore = create((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       console.log('🔑 Attempting login...');
-      // ✅ FIXED: Using full Render URL
-      const response = await axios.post(`${API_URL}/api/auth/login`, credentials);
+      const response = await axios.post('/api/auth/login', credentials);
       const { token, ...user } = response.data;
       
       console.log('✅ Login successful, token received');
@@ -91,7 +86,7 @@ const useAuthStore = create((set, get) => ({
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     
     try {
-      const response = await axios.get(`${API_URL}/api/auth/profile`);
+      const response = await axios.get('/api/auth/profile');
       console.log('✅ User loaded successfully:', response.data.username);
       set({ 
         user: response.data, 
