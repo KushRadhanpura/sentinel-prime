@@ -51,16 +51,24 @@ const LoginPage = () => {
       >
         <div className="flex items-center justify-center mb-3">
           <motion.div
-            animate={{ rotate: 360 }}
+            animate={{ rotateZ: 360 }}
             transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+            className="drop-shadow-[0_0_15px_rgba(34,211,238,0.8)]"
           >
-            <Shield className="w-8 h-8 text-cyan-400 mr-3" />
+            <Shield className="w-10 h-10 text-cyan-400" />
           </motion.div>
-          <h1 className="text-4xl md:text-5xl font-bold text-white tracking-wider">
+          <h1 className="text-4xl md:text-5xl font-bold text-white tracking-wider mx-4 drop-shadow-[0_0_20px_rgba(255,255,255,0.5)]">
             SENTINEL PRIME
           </h1>
+          <motion.div
+            animate={{ rotateZ: 360 }}
+            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+            className="drop-shadow-[0_0_15px_rgba(34,211,238,0.8)]"
+          >
+            <Shield className="w-10 h-10 text-cyan-400" />
+          </motion.div>
         </div>
-        <p className="text-cyan-400 text-lg">Military-Grade Secure Vault</p>
+        <p className="text-cyan-400 text-lg drop-shadow-[0_0_10px_rgba(34,211,238,0.6)]">Military-Grade Secure Vault</p>
       </motion.div>
 
       {/* Login/Register Card */}
