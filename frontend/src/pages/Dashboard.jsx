@@ -51,10 +51,13 @@ const Dashboard = () => {
     e.preventDefault();
     try {
       const tags = formData.tags.split(',').map(t => t.trim()).filter(Boolean);
-      await axios.post('/api/vault', {
+      const response = await axios.post('/api/vault', {
         ...formData,
         tags,
       });
+      
+      console.log('✅ Secret created successfully:', response.data);
+      
       setShowCreateModal(false);
       setFormData({
         title: '',
@@ -66,8 +69,13 @@ const Dashboard = () => {
         notes: '',
       });
       fetchSecrets();
+      
+      // Success notification
+      alert('✅ Secret encrypted and stored successfully!');
     } catch (error) {
-      console.error('Failed to create secret:', error);
+      console.error('❌ Failed to create secret:', error);
+      console.error('Error details:', error.response?.data || error.message);
+      alert(`❌ Error: ${error.response?.data?.message || error.message || 'Failed to create secret. Please try again.'}`);
     }
   };
 
