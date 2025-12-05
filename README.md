@@ -81,7 +81,7 @@ npm run dev
 
 The application will be available at:
 - **Frontend:** http://localhost:5173
-- **Backend:** http://localhost:5000
+- **Backend:** https://sentinel-prime-1a28.onrender.com
 
 ---
 
