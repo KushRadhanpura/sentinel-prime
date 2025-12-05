@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import axios from 'axios';
 
-// DON'T set baseURL - let Vite proxy handle it
-// axios.defaults.baseURL will interfere with the proxy
+// ✅ FIXED: We define the Live Backend URL here
+const API_URL = 'https://sentinel-prime-1a28.onrender.com';
 
 const useAuthStore = create((set, get) => ({
   user: null,
@@ -26,7 +26,8 @@ const useAuthStore = create((set, get) => ({
   register: async (userData) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.post('/api/auth/register', userData);
+      // ✅ FIXED: Using full Render URL
+      const response = await axios.post(`${API_URL}/api/auth/register`, userData);
       const { token, ...user } = response.data;
       
       get().setAuthHeader(token);
@@ -43,7 +44,8 @@ const useAuthStore = create((set, get) => ({
   login: async (credentials) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.post('/api/auth/login', credentials);
+      // ✅ FIXED: Using full Render URL
+      const response = await axios.post(`${API_URL}/api/auth/login`, credentials);
       const { token, ...user } = response.data;
       
       get().setAuthHeader(token);
@@ -69,7 +71,8 @@ const useAuthStore = create((set, get) => ({
 
     get().setAuthHeader(token);
     try {
-      const response = await axios.get('/api/auth/profile');
+      // ✅ FIXED: Using full Render URL
+      const response = await axios.get(`${API_URL}/api/auth/profile`);
       set({ user: response.data, isAuthenticated: true });
     } catch (error) {
       get().logout();
