@@ -33,6 +33,7 @@ const Dashboard = () => {
   }, []);
 
   const fetchSecrets = async () => {
+    setLoading(true);
     try {
       console.log('📥 Fetching secrets from API...');
       console.log('🔑 Current token:', localStorage.getItem('token') ? 'EXISTS' : 'MISSING');
@@ -46,15 +47,23 @@ const Dashboard = () => {
         weak: response.data.filter(s => s.passwordStrength === 'weak').length,
         strength: 256,
       });
+      setLoading(false);
     } catch (error) {
       console.error('❌ Failed to fetch secrets:', error);
       console.error('Error response:', error.response);
-      if (error.response?.status === 401) {
-        alert('⚠️ Session expired. Please login again.');
-        window.location.href = '/login';
-      }
-    } finally {
       setLoading(false);
+      
+      if (error.response?.status === 401) {
+        console.log('🚨 401 error - Session expired');
+        localStorage.removeItem('token');
+        delete axios.defaults.headers.common['Authorization'];
+        window.location.href = '/login';
+      } else if (error.response?.status >= 500) {
+        console.log('⚠️ Server error, will retry...');
+        // Don't show error for server issues
+      } else {
+        console.log('⚠️ Network error');
+      }
     }
   };
 

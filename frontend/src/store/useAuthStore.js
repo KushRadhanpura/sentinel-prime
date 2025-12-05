@@ -11,7 +11,7 @@ if (storedToken) {
 const useAuthStore = create((set, get) => ({
   user: null,
   token: storedToken || null,
-  isAuthenticated: false,
+  isAuthenticated: !!storedToken,
   isLoading: false,
   error: null,
 
@@ -84,6 +84,8 @@ const useAuthStore = create((set, get) => ({
     console.log('🔐 Loading user with token...');
     // Ensure token is set in axios headers
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    // Keep authenticated while validating
+    set({ isAuthenticated: true, isLoading: true });
     
     try {
       const response = await axios.get('/api/auth/profile');
@@ -108,8 +110,9 @@ const useAuthStore = create((set, get) => ({
           isLoading: false 
         });
       } else {
-        console.log('⚠️ Network error, keeping current auth state');
-        set({ isLoading: false });
+        console.log('⚠️ Network error, keeping authenticated');
+        // Keep isAuthenticated true even on network errors
+        set({ isLoading: false, isAuthenticated: true });
       }
     }
   },
