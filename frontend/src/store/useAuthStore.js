@@ -44,14 +44,18 @@ const useAuthStore = create((set, get) => ({
   login: async (credentials) => {
     set({ isLoading: true, error: null });
     try {
+      console.log('🔑 Attempting login...');
       // ✅ FIXED: Using full Render URL
       const response = await axios.post(`${API_URL}/api/auth/login`, credentials);
       const { token, ...user } = response.data;
       
+      console.log('✅ Login successful, token received');
       get().setAuthHeader(token);
       set({ user, token, isAuthenticated: true, isLoading: false });
+      console.log('✅ Auth state updated, user authenticated');
       return response.data;
     } catch (error) {
+      console.error('❌ Login failed:', error.response?.data);
       const message = error.response?.data?.message || 'Login failed';
       set({ error: message, isLoading: false });
       throw new Error(message);
@@ -67,15 +71,29 @@ const useAuthStore = create((set, get) => ({
   // Load user from token
   loadUser: async () => {
     const token = get().token;
-    if (!token) return;
+    if (!token) {
+      set({ isLoading: false });
+      return;
+    }
 
+    console.log('🔐 Loading user with token...');
     get().setAuthHeader(token);
+    
     try {
       // ✅ FIXED: Using full Render URL
       const response = await axios.get(`${API_URL}/api/auth/profile`);
-      set({ user: response.data, isAuthenticated: true });
+      console.log('✅ User loaded successfully:', response.data);
+      set({ user: response.data, isAuthenticated: true, isLoading: false });
     } catch (error) {
-      get().logout();
+      console.error('❌ Failed to load user:', error.response?.status, error.response?.data);
+      // Only logout if token is invalid (401), not on network errors
+      if (error.response?.status === 401) {
+        console.log('🔓 Token invalid, logging out...');
+        get().logout();
+      } else {
+        console.log('⚠️ Network error, keeping token for retry');
+        set({ isLoading: false });
+      }
     }
   },
 
