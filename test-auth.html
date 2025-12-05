@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Auth</title>
+</head>
+<body>
+    <h1>Auth Test</h1>
+    <button onclick="checkToken()">Check Token</button>
+    <button onclick="testCreate()">Test Create Secret</button>
+    <pre id="output"></pre>
+    
+    <script>
+        function checkToken() {
+            const token = localStorage.getItem('token');
+            document.getElementById('output').textContent = 
+                'Token: ' + (token ? 'EXISTS (' + token.substring(0, 20) + '...)' : 'NOT FOUND');
+        }
+        
+        async function testCreate() {
+            const token = localStorage.getItem('token');
+            const output = document.getElementById('output');
+            
+            try {
+                const response = await fetch('https://sentinel-prime-1a28.onrender.com/api/vault', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({
+                        title: 'Test Secret',
+                        password: 'test123',
+                        category: 'Other'
+                    })
+                });
+                
+                const data = await response.json();
+                output.textContent = 'Response: ' + JSON.stringify(data, null, 2);
+            } catch (error) {
+                output.textContent = 'Error: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>

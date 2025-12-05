@@ -34,7 +34,9 @@ const Dashboard = () => {
 
   const fetchSecrets = async () => {
     try {
+      console.log('📥 Fetching secrets from API...');
       const response = await axios.get('/api/vault');
+      console.log('✅ Secrets fetched:', response.data);
       setSecrets(response.data);
       setStats({
         total: response.data.length,
@@ -42,7 +44,12 @@ const Dashboard = () => {
         strength: 256,
       });
     } catch (error) {
-      console.error('Failed to fetch secrets:', error);
+      console.error('❌ Failed to fetch secrets:', error);
+      console.error('Error response:', error.response);
+      if (error.response?.status === 401) {
+        alert('⚠️ Session expired. Please login again.');
+        window.location.href = '/login';
+      }
     } finally {
       setLoading(false);
     }
