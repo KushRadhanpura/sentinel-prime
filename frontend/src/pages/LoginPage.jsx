@@ -50,21 +50,12 @@ const LoginPage = () => {
         className="text-center mb-8"
       >
         <div className="flex items-center justify-center mb-3">
-          <motion.h1
-            animate={{ 
-              y: [0, -10, 0],
-              textShadow: [
-                "0 0 20px rgba(255,255,255,0.5)",
-                "0 0 40px rgba(255,255,255,0.8)",
-                "0 0 20px rgba(255,255,255,0.5)"
-              ]
-            }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          <h1
             className="text-4xl md:text-5xl font-bold text-white tracking-wider mr-4"
             style={{ textShadow: "0 0 20px rgba(255,255,255,0.5)" }}
           >
             SENTINEL PRIME
-          </motion.h1>
+          </h1>
           <motion.div
             animate={{ rotateY: 360 }}
             transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
