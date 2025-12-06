@@ -408,51 +408,39 @@ const Dashboard = () => {
           </motion.button>
         </motion.div>
 
-        {/* Stats Grid - Professional Icon Alignment */}
+        {/* Stats Grid - Fixed at top, no collision */}
         <div className="grid grid-cols-3 gap-4 mb-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="glass-card border-gold/30 p-6"
+            className="glass-card border-gold/30 p-6 text-center"
           >
-            <div className="flex items-center justify-between mb-3">
-              <div className="p-3 bg-gold/10 rounded-lg border border-gold/30">
-                <Database className="w-6 h-6 text-gold" />
-              </div>
-              <p className="text-3xl font-bold text-gold glow-gold">{stats.total}</p>
-            </div>
-            <p className="text-sm text-silver/90 font-mono uppercase tracking-wide">Total Secrets</p>
+            <Database className="w-8 h-8 text-gold mb-3 mx-auto" />
+            <p className="text-4xl font-bold text-gold glow-gold mb-1">{stats.total}</p>
+            <p className="text-xs text-silver/80 font-mono uppercase tracking-wider">Total Secrets</p>
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="glass-card border-cyan-500/30 p-6"
+            className="glass-card border-green-500/30 p-6 text-center"
           >
-            <div className="flex items-center justify-between mb-3">
-              <div className="p-3 bg-cyan-500/10 rounded-lg border border-cyan-500/30">
-                <Lock className="w-6 h-6 text-cyan-400" />
-              </div>
-              <p className="text-3xl font-bold text-cyan-400 glow-blue">AES</p>
-            </div>
-            <p className="text-sm text-silver/90 font-mono uppercase tracking-wide">Encryption Type</p>
+            <Activity className="w-8 h-8 text-green-500 mb-3 mx-auto" />
+            <p className="text-4xl font-bold text-green-500 glow-green mb-1">100%</p>
+            <p className="text-xs text-silver/80 font-mono uppercase tracking-wider">Security Level</p>
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="glass-card border-purple-500/30 p-6"
+            className="glass-card border-red-500/30 p-6 text-center"
           >
-            <div className="flex items-center justify-between mb-3">
-              <div className="p-3 bg-purple-500/10 rounded-lg border border-purple-500/30">
-                <Key className="w-6 h-6 text-purple-400" />
-              </div>
-              <p className="text-3xl font-bold text-purple-400">{stats.strength}</p>
-            </div>
-            <p className="text-sm text-silver/90 font-mono uppercase tracking-wide">Bit Strength</p>
+            <Zap className="w-8 h-8 text-red-500 mb-3 mx-auto" />
+            <p className="text-4xl font-bold text-red-500 mb-1">{stats.strength}</p>
+            <p className="text-xs text-silver/80 font-mono uppercase tracking-wider">Bit Encryption</p>
           </motion.div>
         </div>
 
