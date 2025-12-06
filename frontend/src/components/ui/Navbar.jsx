@@ -28,10 +28,12 @@ const Navbar = () => {
               </Link>
               <Link
                 to="/profile"
-                className="p-2 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 transition-colors"
+                className="flex items-center space-x-2 p-2 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 transition-colors"
                 title="Profile"
               >
-                <User className="w-5 h-5" />
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center ring-2 ring-cyan-400/30">
+                  <User className="w-4 h-4 text-white" />
+                </div>
               </Link>
               <Link
                 to="/settings"

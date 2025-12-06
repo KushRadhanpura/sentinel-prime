@@ -187,6 +187,32 @@ const Dashboard = () => {
     return badgeColors[category] || badgeColors.Other;
   };
 
+  const getCategoryIconColor = (category) => {
+    const iconColors = {
+      Social: 'bg-blue-500/20 border-blue-400/60',
+      Work: 'bg-purple-500/20 border-purple-400/60',
+      Finance: 'bg-emerald-500/20 border-emerald-400/60',
+      Personal: 'bg-amber-500/20 border-amber-400/60',
+      Shopping: 'bg-rose-500/20 border-rose-400/60',
+      Entertainment: 'bg-violet-500/20 border-violet-400/60',
+      Other: 'bg-slate-500/20 border-slate-400/60',
+    };
+    return iconColors[category] || iconColors.Other;
+  };
+
+  const getCategoryIconTextColor = (category) => {
+    const textColors = {
+      Social: 'text-blue-400',
+      Work: 'text-purple-400',
+      Finance: 'text-emerald-400',
+      Personal: 'text-amber-400',
+      Shopping: 'text-rose-400',
+      Entertainment: 'text-violet-400',
+      Other: 'text-slate-400',
+    };
+    return textColors[category] || textColors.Other;
+  };
+
   if (loading) {
     return (
       <Layout>
@@ -457,8 +483,8 @@ const Dashboard = () => {
                     {/* Content */}
                     <div className="space-y-3">
                       <div className="flex items-start space-x-3">
-                        <div className="w-10 h-10 rounded-lg bg-gold/20 border border-gold/50 flex items-center justify-center flex-shrink-0">
-                          <Key className="w-5 h-5 text-gold" />
+                        <div className={`w-10 h-10 rounded-lg border flex items-center justify-center flex-shrink-0 ${getCategoryIconColor(secret.category)}`}>
+                          <Key className={`w-5 h-5 ${getCategoryIconTextColor(secret.category)}`} />
                         </div>
                         <div className="flex-1 min-w-0">
                           <h3 className="font-rajdhani font-bold text-lg text-gold truncate">
