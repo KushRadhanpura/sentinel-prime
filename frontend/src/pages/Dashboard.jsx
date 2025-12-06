@@ -163,13 +163,28 @@ const Dashboard = () => {
 
   const getCategoryColor = (category) => {
     const colors = {
-      Social: 'border-blue-500/50 bg-blue-500/5',
-      Work: 'border-purple-500/50 bg-purple-500/5',
-      Finance: 'border-green-500/50 bg-green-500/5',
-      Personal: 'border-gold/50 bg-gold/5',
-      Other: 'border-silver/50 bg-silver/5',
+      Social: 'border-blue-500/60 bg-gradient-to-br from-blue-500/10 via-cyan-500/5 to-blue-600/10',
+      Work: 'border-purple-500/60 bg-gradient-to-br from-purple-500/10 via-pink-500/5 to-purple-600/10',
+      Finance: 'border-emerald-500/60 bg-gradient-to-br from-emerald-500/10 via-green-500/5 to-teal-600/10',
+      Personal: 'border-amber-500/60 bg-gradient-to-br from-amber-500/10 via-yellow-500/5 to-orange-600/10',
+      Shopping: 'border-rose-500/60 bg-gradient-to-br from-rose-500/10 via-pink-500/5 to-red-600/10',
+      Entertainment: 'border-violet-500/60 bg-gradient-to-br from-violet-500/10 via-purple-500/5 to-indigo-600/10',
+      Other: 'border-slate-500/60 bg-gradient-to-br from-slate-500/10 via-gray-500/5 to-zinc-600/10',
     };
     return colors[category] || colors.Other;
+  };
+
+  const getCategoryBadgeColor = (category) => {
+    const badgeColors = {
+      Social: 'bg-blue-500/20 border-blue-400/60 text-blue-300',
+      Work: 'bg-purple-500/20 border-purple-400/60 text-purple-300',
+      Finance: 'bg-emerald-500/20 border-emerald-400/60 text-emerald-300',
+      Personal: 'bg-amber-500/20 border-amber-400/60 text-amber-300',
+      Shopping: 'bg-rose-500/20 border-rose-400/60 text-rose-300',
+      Entertainment: 'bg-violet-500/20 border-violet-400/60 text-violet-300',
+      Other: 'bg-slate-500/20 border-slate-400/60 text-slate-300',
+    };
+    return badgeColors[category] || badgeColors.Other;
   };
 
   if (loading) {
@@ -341,14 +356,49 @@ const Dashboard = () => {
           </motion.button>
         </motion.div>
 
+        {/* Stats Grid - Fixed at top, no collision */}
+        <div className="grid grid-cols-3 gap-4 mb-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="glass-card border-gold/30 p-6 text-center"
+          >
+            <Database className="w-8 h-8 text-gold mb-3 mx-auto" />
+            <p className="text-4xl font-bold text-gold glow-gold mb-1">{stats.total}</p>
+            <p className="text-xs text-silver/80 font-mono uppercase tracking-wider">Total Secrets</p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="glass-card border-green-500/30 p-6 text-center"
+          >
+            <Activity className="w-8 h-8 text-green-500 mb-3 mx-auto" />
+            <p className="text-4xl font-bold text-green-500 glow-green mb-1">100%</p>
+            <p className="text-xs text-silver/80 font-mono uppercase tracking-wider">Security Level</p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="glass-card border-red-500/30 p-6 text-center"
+          >
+            <Zap className="w-8 h-8 text-red-500 mb-3 mx-auto" />
+            <p className="text-4xl font-bold text-red-500 mb-1">{stats.strength}</p>
+            <p className="text-xs text-silver/80 font-mono uppercase tracking-wider">Bit Encryption</p>
+          </motion.div>
+        </div>
+
         <div className="grid lg:grid-cols-4 gap-6">
-          {/* Left Sidebar - Stats & Drone */}
-          <div className="lg:col-span-1 space-y-6">
-            {/* Sentinel Drone */}
+          {/* Left Sidebar - Sentinel Guardian Only */}
+          <div className="lg:col-span-1">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="glass-card border-gold/30 p-6 h-[400px] overflow-hidden"
+              className="glass-card border-gold/30 p-6 sticky top-6"
             >
               <h2 className="text-lg font-rajdhani font-bold text-gold mb-2 flex items-center">
                 <Shield className="w-5 h-5 mr-2" />
@@ -358,45 +408,9 @@ const Dashboard = () => {
                 <HolographicCube />
               </div>
             </motion.div>
-
-            {/* Stats Grid - Horizontal with Proper Spacing */}
-            <div className="flex justify-between items-center gap-6">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="glass-card border-gold/30 p-8 text-center flex-1"
-              >
-                <Database className="w-10 h-10 text-gold mb-4 mx-auto" />
-                <p className="text-5xl font-bold text-gold glow-gold mb-2">{stats.total}</p>
-                <p className="text-sm text-silver/80 font-mono uppercase tracking-wider">Total Secrets</p>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="glass-card border-green-500/30 p-8 text-center flex-1"
-              >
-                <Activity className="w-10 h-10 text-green-500 mb-4 mx-auto" />
-                <p className="text-5xl font-bold text-green-500 glow-green mb-2">100%</p>
-                <p className="text-sm text-silver/80 font-mono uppercase tracking-wider">Security Level</p>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="glass-card border-red-500/30 p-8 text-center flex-1"
-              >
-                <Zap className="w-10 h-10 text-red-500 mb-4 mx-auto" />
-                <p className="text-5xl font-bold text-red-500 mb-2">{stats.strength}</p>
-                <p className="text-sm text-silver/80 font-mono uppercase tracking-wider">Bit Encryption</p>
-              </motion.div>
-            </div>
           </div>
 
-          {/* Main Content - Secrets Grid */}
+          {/* Main Content - Secrets Grid (Scrollable, no collision) */}
           <div className="lg:col-span-3">
             {secrets.length === 0 ? (
               <motion.div
@@ -435,7 +449,7 @@ const Dashboard = () => {
 
                     {/* Category Badge */}
                     <div className="absolute top-2 right-2">
-                      <span className="px-2 py-1 bg-void-black/50 border border-gold/50 rounded text-xs font-mono text-gold">
+                      <span className={`px-3 py-1 border rounded-full text-xs font-bold tracking-wide backdrop-blur-sm ${getCategoryBadgeColor(secret.category)}`}>
                         {secret.category}
                       </span>
                     </div>
@@ -511,10 +525,14 @@ const Dashboard = () => {
                               secret._id
                             )
                           }
-                          className="flex-1 py-2 bg-gold/10 hover:bg-gold/20 border border-gold/30 rounded text-gold text-sm font-mono transition-colors flex items-center justify-center space-x-1"
+                          className={`flex-1 py-2 border rounded text-sm font-mono transition-all flex items-center justify-center space-x-1 ${
+                            copiedId === secret._id
+                              ? 'bg-green-500/20 border-green-500/50 text-green-400'
+                              : 'bg-gold/10 hover:bg-gold/20 border-gold/30 text-gold'
+                          }`}
                         >
                           <Copy className="w-4 h-4" />
-                          <span>{copiedId === secret._id ? 'COPIED!' : 'COPY'}</span>
+                          <span>{copiedId === secret._id ? 'PASSWORD COPIED!' : 'COPY PASSWORD'}</span>
                         </button>
                         <button
                           onClick={() => handleDeleteSecret(secret._id)}
