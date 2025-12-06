@@ -210,6 +210,24 @@ const removeProfilePicture = async (req, res) => {
   }
 };
 
+// @desc    Enable 2FA
+// @route   PUT /api/auth/enable-2fa
+// @access  Private
+const enable2FA = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { twoFactorEnabled: true },
+      { new: true }
+    ).select('-password');
+    
+    console.log('\u2705 2FA enabled for user:', user.username);
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -217,4 +235,5 @@ module.exports = {
   deleteAccount,
   updateProfilePicture,
   removeProfilePicture,
+  enable2FA,
 };

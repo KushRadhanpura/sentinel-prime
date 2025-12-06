@@ -75,15 +75,37 @@ const TwoFactorSetup = () => {
     alert('✅ Backup codes copied to clipboard!');
   };
 
-  const downloadBackupCodes = () => {
+  const downloadBackupCodes = async () => {
     const blob = new Blob([backupCodes.join('\n')], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = 'sentinel-prime-backup-codes.txt';
     a.click();
-    // Mark 2FA as completed
-    localStorage.setItem('twoFactorEnabled', 'true');
+    
+    // Update backend to mark 2FA as enabled
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://sentinel-prime-1a28.onrender.com'}/api/auth/enable-2fa`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ twoFactorEnabled: true, backupCodes })
+      });
+      
+      if (response.ok) {
+        const updatedUser = await response.json();
+        // Update user in store
+        const useAuthStore = await import('../store/useAuthStore');
+        useAuthStore.default.getState().setUser(updatedUser);
+        alert('\u2705 2FA enabled successfully!');
+        setTimeout(() => navigate('/settings'), 1500);
+      }
+    } catch (error) {
+      console.error('Error enabling 2FA:', error);
+      alert('\u26a0\ufe0f Backup codes downloaded but failed to enable 2FA in database');
+    }
   };
 
   return (
