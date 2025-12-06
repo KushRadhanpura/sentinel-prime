@@ -12,7 +12,8 @@ const Dashboard = () => {
   const [revealedSecrets, setRevealedSecrets] = useState({});
   const [scanningSecret, setScanningSecret] = useState(null);
   const [submitting, setSubmitting] = useState(false);
-  const [stats, setStats] = useState({
+  const [copiedId, setCopiedId] = useState(null);
+  const [stats, setStats, setStats] = useState({
     total: 0,
     weak: 0,
     strength: 256,
@@ -138,9 +139,10 @@ const Dashboard = () => {
     }, 1500);
   };
 
-  const handleCopyToClipboard = (text) => {
+  const handleCopyToClipboard = (text, id) => {
     navigator.clipboard.writeText(text);
-    // Could add toast notification here
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
   };
 
   const handleDeleteSecret = async (id) => {
@@ -505,13 +507,14 @@ const Dashboard = () => {
                         <button
                           onClick={() =>
                             handleCopyToClipboard(
-                              revealedSecrets[secret._id] || 'Hidden'
+                              revealedSecrets[secret._id] || 'Hidden',
+                              secret._id
                             )
                           }
                           className="flex-1 py-2 bg-gold/10 hover:bg-gold/20 border border-gold/30 rounded text-gold text-sm font-mono transition-colors flex items-center justify-center space-x-1"
                         >
                           <Copy className="w-4 h-4" />
-                          <span>COPY</span>
+                          <span>{copiedId === secret._id ? 'COPIED!' : 'COPY'}</span>
                         </button>
                         <button
                           onClick={() => handleDeleteSecret(secret._id)}

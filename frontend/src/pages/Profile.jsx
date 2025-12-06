@@ -1,11 +1,25 @@
-import React from 'react';
-import { Shield, User, Mail, Key, Calendar } from 'lucide-react';
+import React, { useState } from 'react';
+import { Shield, User, Mail, Key, Calendar, Camera } from 'lucide-react';
 import { motion } from 'framer-motion';
 import useAuthStore from '../store/useAuthStore';
 import Layout from '../components/Layout';
 
 const Profile = () => {
   const { user } = useAuthStore();
+  const [profileImage, setProfileImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfileImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   return (
     <Layout>
@@ -27,8 +41,27 @@ const Profile = () => {
           {/* Profile Card */}
           <div className="bg-slate-800/50 backdrop-blur-lg rounded-lg p-8 border border-cyan-500/20">
             <div className="flex items-center space-x-6 mb-8">
-              <div className="w-24 h-24 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center">
-                <User className="w-12 h-12 text-white" />
+              <div className="relative group">
+                <div className="w-24 h-24 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center overflow-hidden">
+                  {imagePreview ? (
+                    <img src={imagePreview} alt="Profile" className="w-full h-full object-cover" />
+                  ) : (
+                    <User className="w-12 h-12 text-white" />
+                  )}
+                </div>
+                <label
+                  htmlFor="profile-upload"
+                  className="absolute bottom-0 right-0 w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-cyan-600 transition-colors"
+                >
+                  <Camera className="w-4 h-4 text-white" />
+                </label>
+                <input
+                  id="profile-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                />
               </div>
               <div>
                 <h2 className="text-2xl font-bold text-white">{user?.username || 'User'}</h2>
@@ -66,7 +99,18 @@ const Profile = () => {
                 <div>
                   <p className="text-sm text-gray-400">Member Since</p>
                   <p className="text-white font-medium">
-                    {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
+                    {user?.createdAt 
+                      ? new Date(user.createdAt).toLocaleDateString('en-US', { 
+                          year: 'numeric', 
+                          month: 'long', 
+                          day: 'numeric' 
+                        })
+                      : new Date().toLocaleDateString('en-US', { 
+                          year: 'numeric', 
+                          month: 'long', 
+                          day: 'numeric' 
+                        })
+                    }
                   </p>
                 </div>
               </div>

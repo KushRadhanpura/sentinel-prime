@@ -8,15 +8,19 @@ const TwoFactorSetup = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [verificationCode, setVerificationCode] = useState('');
-  const [backupCodes, setBackupCodes] = useState([
-    'ABCD-1234-EFGH',
-    'IJKL-5678-MNOP',
-    'QRST-9012-UVWX',
-    'YZAB-3456-CDEF',
-    'GHIJ-7890-KLMN',
-    'OPQR-1234-STUV',
-  ]);
+  const [backupCodes, setBackupCodes] = useState([]);
+  const [isVerified, setIsVerified] = useState(false);
   const [qrCodeData] = useState('otpauth://totp/SentinelPrime:user@example.com?secret=JBSWY3DPEHPK3PXP&issuer=SentinelPrime');
+
+  // Generate backup codes after successful verification
+  const generateBackupCodes = () => {
+    const codes = [];
+    for (let i = 0; i < 8; i++) {
+      const code = `${Math.random().toString(36).substr(2, 4).toUpperCase()}-${Math.random().toString(36).substr(2, 4).toUpperCase()}-${Math.random().toString(36).substr(2, 4).toUpperCase()}`;
+      codes.push(code);
+    }
+    return codes;
+  };
 
   const steps = [
     {
@@ -55,12 +59,20 @@ const TwoFactorSetup = () => {
 
   const handleVerify = () => {
     // TODO: Add API verification
-    console.log('Verifying code:', verificationCode);
-    handleNextStep();
+    if (verificationCode.length === 6) {
+      console.log('Verifying code:', verificationCode);
+      setIsVerified(true);
+      const codes = generateBackupCodes();
+      setBackupCodes(codes);
+      handleNextStep();
+    } else {
+      alert('Please enter a valid 6-digit code');
+    }
   };
 
   const copyBackupCodes = () => {
     navigator.clipboard.writeText(backupCodes.join('\n'));
+    alert('✅ Backup codes copied to clipboard!');
   };
 
   const downloadBackupCodes = () => {
