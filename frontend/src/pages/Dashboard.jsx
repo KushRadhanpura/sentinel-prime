@@ -13,7 +13,7 @@ const Dashboard = () => {
   const [scanningSecret, setScanningSecret] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [copiedId, setCopiedId] = useState(null);
-  const [stats, setStats, setStats] = useState({
+  const [stats, setStats] = useState({
     total: 0,
     weak: 0,
     strength: 256,
