@@ -389,19 +389,13 @@ const Dashboard = () => {
           animate={{ opacity: 1, y: 0 }}
           className="flex justify-between items-center"
         >
-          <div className="flex items-center space-x-4">
-            {/* Profile Picture */}
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center ring-4 ring-cyan-400/30 shadow-lg shadow-cyan-500/50">
-              <User className="w-8 h-8 text-white" />
-            </div>
-            <div>
-              <h1 className="text-4xl font-rajdhani font-bold text-gold mb-2 glow-gold">
-                THE VAULT
-              </h1>
-              <p className="text-silver/70">
-                🔒 Zero-Knowledge Encrypted Storage | AES-256-CBC
-              </p>
-            </div>
+          <div>
+            <h1 className="text-4xl font-rajdhani font-bold text-gold mb-2 glow-gold">
+              THE VAULT
+            </h1>
+            <p className="text-silver/70">
+              🔒 Zero-Knowledge Encrypted Storage | AES-256-CBC
+            </p>
           </div>
           <motion.button
             whileHover={{ scale: 1.05 }}

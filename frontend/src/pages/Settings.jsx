@@ -51,10 +51,29 @@ const Settings = () => {
       alert('Please type DELETE to confirm');
       return;
     }
-    // TODO: Add API call to delete account
-    console.log('Deleting account...');
-    setShowDeleteModal(false);
-    logout();
+    
+    try {
+      console.log('🗑️ Deleting account...');
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://sentinel-prime-1a28.onrender.com'}/api/auth/account`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      
+      if (response.ok) {
+        alert('✅ Account deleted successfully. All your data has been permanently removed.');
+        setShowDeleteModal(false);
+        logout();
+        window.location.href = '/login';
+      } else {
+        const error = await response.json();
+        alert(`❌ Error: ${error.message}`);
+      }
+    } catch (error) {
+      console.error('❌ Delete account error:', error);
+      alert('❌ Failed to delete account. Please try again.');
+    }
   };
 
   return (

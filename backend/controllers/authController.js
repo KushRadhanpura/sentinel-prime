@@ -142,8 +142,37 @@ const getUserProfile = async (req, res) => {
   }
 };
 
+// @desc    Delete user account
+// @route   DELETE /api/auth/account
+// @access  Private
+const deleteAccount = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    
+    console.log('🗑️ Deleting account for user:', userId);
+    
+    // Delete all user's vault secrets
+    const VaultSecret = require('../models/VaultSecret');
+    const deletedSecrets = await VaultSecret.deleteMany({ user: userId });
+    console.log(`✅ Deleted ${deletedSecrets.deletedCount} vault secrets`);
+    
+    // Delete user account
+    await User.findByIdAndDelete(userId);
+    console.log('✅ User account deleted successfully');
+    
+    res.json({ 
+      message: 'Account and all data deleted successfully',
+      deletedSecrets: deletedSecrets.deletedCount
+    });
+  } catch (error) {
+    console.error('❌ Delete account error:', error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
   getUserProfile,
+  deleteAccount,
 };
