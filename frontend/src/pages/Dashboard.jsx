@@ -40,7 +40,10 @@ const Dashboard = () => {
       console.log('🔑 Axios auth header:', axios.defaults.headers.common['Authorization'] ? 'SET' : 'NOT SET');
       
       const response = await axios.get('/api/vault');
-      console.log('✅ Secrets fetched:', response.data);
+      console.log('✅ Secrets fetched successfully');
+      console.log('📊 Number of secrets:', response.data.length);
+      console.log('📄 Secrets data:', response.data);
+      
       setSecrets(response.data);
       setStats({
         total: response.data.length,
@@ -78,18 +81,19 @@ const Dashboard = () => {
     try {
       const tags = formData.tags.split(',').map(t => t.trim()).filter(Boolean);
       
-      console.log('📤 Sending to API:', {
+      const payload = {
         ...formData,
         tags,
-      });
+      };
       
-      const response = await axios.post('/api/vault', {
-        ...formData,
-        tags,
-      });
+      console.log('📤 Sending to API:', payload);
+      
+      const response = await axios.post('/api/vault', payload);
       
       console.log('✅ Secret created successfully:', response.data);
+      console.log('🔄 Refreshing secrets list...');
       
+      // Clear form and close modal
       setShowCreateModal(false);
       setFormData({
         title: '',
@@ -100,7 +104,9 @@ const Dashboard = () => {
         username: '',
         notes: '',
       });
-      fetchSecrets();
+      
+      // Refetch secrets to update the list
+      await fetchSecrets();
       
       // Success notification
       alert('✅ Secret encrypted and stored successfully!');

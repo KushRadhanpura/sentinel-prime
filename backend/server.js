@@ -31,6 +31,12 @@ if (!process.env.MONGO_URI) {
   process.exit(1);
 }
 
+if (!process.env.ENCRYPTION_KEY) {
+  console.error('❌ FATAL ERROR: ENCRYPTION_KEY environment variable is not set!');
+  console.error('⚠️  Add ENCRYPTION_KEY to your Render environment variables');
+  process.exit(1);
+}
+
 console.log('✅ Environment variables validated');
 
 // ====================================

@@ -8,6 +8,9 @@ const createSecret = async (req, res) => {
   try {
     const { title, password, category, tags, websiteUrl, username, notes } = req.body;
 
+    console.log('📝 Creating secret for user:', req.user._id);
+    console.log('📝 Secret data:', { title, category, tags });
+
     if (!title || !password) {
       res.status(400);
       throw new Error('Title and password are required');
@@ -28,6 +31,8 @@ const createSecret = async (req, res) => {
       notes: notes || '',
     });
 
+    console.log('✅ Secret created successfully:', secret._id);
+
     res.status(201).json({
       _id: secret._id,
       title: secret.title,
@@ -38,6 +43,7 @@ const createSecret = async (req, res) => {
       createdAt: secret.createdAt,
     });
   } catch (error) {
+    console.error('❌ Failed to create secret:', error.message);
     res.status(res.statusCode || 500).json({ message: error.message });
   }
 };
@@ -47,13 +53,18 @@ const createSecret = async (req, res) => {
 // @access  Private
 const getSecrets = async (req, res) => {
   try {
+    console.log('📥 Fetching secrets for user:', req.user._id);
+    
     const secrets = await VaultSecret.find({ user: req.user._id })
       .select('-encryptedPassword -iv')
       .sort({ createdAt: -1 })
       .lean();
 
+    console.log(`✅ Found ${secrets.length} secrets for user`);
+    
     res.json(secrets);
   } catch (error) {
+    console.error('❌ Failed to fetch secrets:', error.message);
     res.status(500).json({ message: error.message });
   }
 };
