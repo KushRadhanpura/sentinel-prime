@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Shield, Lock, Eye, EyeOff, Copy, Trash2, Key, Database, Activity, Zap, Star, Github } from 'lucide-react';
+import { Plus, Shield, Lock, Eye, EyeOff, Copy, Trash2, Key, Database, Activity, Zap, Star, Github, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import Layout from '../components/Layout';
