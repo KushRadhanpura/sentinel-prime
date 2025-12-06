@@ -62,36 +62,64 @@ const loginUser = async (req, res) => {
     console.log(`
 🔐 LOGIN ATTEMPT:
    Email: ${email}
+   Password Provided: ${password ? 'YES' : 'NO'}
    Password Length: ${password ? password.length : 0}
    Timestamp: ${new Date().toISOString()}
     `);
 
     if (!email || !password) {
       console.log('❌ Missing credentials');
-      res.status(400);
-      throw new Error('Please provide email and password');
+      return res.status(400).json({ 
+        message: 'Please provide email and password',
+        code: 'MISSING_CREDENTIALS'
+      });
     }
 
     // Find user by email
     const user = await User.findOne({ email });
-    console.log(`👤 User found: ${user ? 'YES' : 'NO'}`);
+    console.log(`👤 User search result:`, {
+      found: !!user,
+      email: email,
+      userInDB: user ? user.email : 'NOT_FOUND'
+    });
 
-    if (user && (await user.matchPassword(password))) {
+    if (!user) {
+      console.log('❌ User not found in database');
+      return res.status(401).json({ 
+        message: 'Invalid email or password',
+        code: 'USER_NOT_FOUND'
+      });
+    }
+
+    // Check password
+    const isPasswordMatch = await user.matchPassword(password);
+    console.log('🔑 Password match:', isPasswordMatch);
+
+    if (isPasswordMatch) {
+      const token = generateToken(user._id);
       console.log('✅ Login successful for:', email);
-      res.json({
+      console.log('🎫 Token generated:', token.substring(0, 20) + '...');
+      
+      return res.json({
         _id: user._id,
         username: user.username,
         email: user.email,
         role: user.role,
-        token: generateToken(user._id),
+        token: token,
       });
     } else {
-      console.log('❌ Invalid credentials for:', email);
-      res.status(401);
-      throw new Error('Invalid email or password');
+      console.log('❌ Password mismatch for:', email);
+      return res.status(401).json({ 
+        message: 'Invalid email or password',
+        code: 'INVALID_PASSWORD'
+      });
     }
   } catch (error) {
-    res.status(res.statusCode || 500).json({ message: error.message });
+    console.error('🚨 LOGIN ERROR:', error);
+    return res.status(500).json({ 
+      message: error.message,
+      code: 'SERVER_ERROR'
+    });
   }
 };
 

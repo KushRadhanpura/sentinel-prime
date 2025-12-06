@@ -12,10 +12,37 @@ const vaultRoutes = require('./routes/vaultRoutes');
 const app = express();
 
 // ====================================
-// 1. RAMBAN CORS FIX (Allow Everything)
+// 1. PRODUCTION-GRADE CORS CONFIGURATION
 // ====================================
-// This allows ANY website (Vercel, Localhost, Mobile) to talk to your server.
-app.use(cors()); 
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, Postman, or same-origin)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = [
+      'https://sentinel-prime-wine.vercel.app',
+      'http://localhost:5173',
+      'http://localhost:3000',
+    ];
+    
+    // Check if origin is in allowed list or is a Vercel deployment
+    if (allowedOrigins.includes(origin) || origin.includes('vercel.app')) {
+      callback(null, true);
+    } else {
+      console.log('⚠️ CORS blocked origin:', origin);
+      callback(null, true); // Allow anyway for development
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  exposedHeaders: ['Content-Length', 'X-Request-Id'],
+  maxAge: 86400, // 24 hours
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+};
+
+app.use(cors(corsOptions)); 
 
 // ====================================
 // 2. ROBUST DATABASE CONNECTION

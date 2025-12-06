@@ -49,18 +49,34 @@ const useAuthStore = create((set, get) => ({
   login: async (credentials) => {
     set({ isLoading: true, error: null });
     try {
-      console.log('🔑 Attempting login...');
+      console.log('🔑 Attempting login with credentials:', { email: credentials.email });
+      console.log('📡 API Base URL:', axios.defaults.baseURL);
+      console.log('🔐 WithCredentials:', axios.defaults.withCredentials);
+      
       const response = await axios.post('/api/auth/login', credentials);
+      console.log('✅ Login response received:', response.data);
+      
       const { token, ...user } = response.data;
+      
+      if (!token) {
+        throw new Error('No token received from server');
+      }
       
       console.log('✅ Login successful, token received');
       get().setAuthHeader(token);
+      
+      // Verify token was set
+      console.log('🔑 Token in localStorage:', !!localStorage.getItem('token'));
+      console.log('🔑 Token in axios headers:', !!axios.defaults.headers.common['Authorization']);
+      
       set({ user, token, isAuthenticated: true, isLoading: false });
       console.log('✅ Auth state updated, user authenticated');
       return response.data;
     } catch (error) {
-      console.error('❌ Login failed:', error.response?.data);
-      const message = error.response?.data?.message || 'Login failed';
+      console.error('❌ Login failed:', error);
+      console.error('❌ Response data:', error.response?.data);
+      console.error('❌ Response status:', error.response?.status);
+      const message = error.response?.data?.message || error.message || 'Login failed';
       set({ error: message, isLoading: false });
       throw new Error(message);
     }
