@@ -36,12 +36,13 @@ const registerUser = async (req, res) => {
     });
 
     if (user) {
+      // Do NOT send token on registration - user must login
       res.status(201).json({
         _id: user._id,
         username: user.username,
         email: user.email,
         role: user.role,
-        token: generateToken(user._id),
+        message: 'Registration successful! Please login with your credentials.',
       });
     } else {
       res.status(400);

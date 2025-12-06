@@ -33,10 +33,20 @@ const useAuthStore = create((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await axios.post('/api/auth/register', userData);
-      const { token, ...user } = response.data;
       
-      get().setAuthHeader(token);
-      set({ user, token, isAuthenticated: true, isLoading: false });
+      console.log('✅ Registration successful:', response.data);
+      
+      // Do NOT auto-login after registration
+      // User must manually login with their credentials
+      set({ 
+        isLoading: false, 
+        error: null,
+        // Keep user logged out
+        user: null,
+        token: null,
+        isAuthenticated: false
+      });
+      
       return response.data;
     } catch (error) {
       const message = error.response?.data?.message || 'Registration failed';

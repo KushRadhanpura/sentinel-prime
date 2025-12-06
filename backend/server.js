@@ -12,6 +12,28 @@ const vaultRoutes = require('./routes/vaultRoutes');
 const app = express();
 
 // ====================================
+// TRUST PROXY (Required for Render/Heroku/etc)
+// ====================================
+// Enable trust proxy to get correct client IP behind reverse proxies
+app.set('trust proxy', 1);
+
+// ====================================
+// VALIDATE CRITICAL ENVIRONMENT VARIABLES
+// ====================================
+if (!process.env.JWT_SECRET) {
+  console.error('❌ FATAL ERROR: JWT_SECRET environment variable is not set!');
+  console.error('⚠️  Add JWT_SECRET to your Render environment variables');
+  process.exit(1);
+}
+
+if (!process.env.MONGO_URI) {
+  console.error('❌ FATAL ERROR: MONGO_URI environment variable is not set!');
+  process.exit(1);
+}
+
+console.log('✅ Environment variables validated');
+
+// ====================================
 // 1. PRODUCTION-GRADE CORS CONFIGURATION
 // ====================================
 const corsOptions = {
@@ -50,11 +72,6 @@ app.use(cors(corsOptions));
 const connectDB = async () => {
   try {
     console.log("Attempting DB Connection...");
-    
-    if (!process.env.MONGO_URI) {
-      console.error("FATAL ERROR: MONGO_URI is undefined!");
-      process.exit(1);
-    }
 
     const conn = await mongoose.connect(process.env.MONGO_URI);
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);

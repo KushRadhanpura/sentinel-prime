@@ -25,13 +25,16 @@ const LoginPage = () => {
       if (isLogin) {
         const result = await login({ email: formData.email, password: formData.password });
         console.log('✅ Login successful, result:', result);
+        console.log('📍 Navigating to dashboard...');
+        navigate('/dashboard');
       } else {
         const result = await register(formData);
         console.log('✅ Register successful, result:', result);
+        // After registration, switch to login mode
+        alert('✅ Registration successful! Please login with your credentials.');
+        setIsLogin(true);
+        setFormData({ username: '', email: '', password: '' });
       }
-      
-      console.log('📍 Navigating to dashboard...');
-      navigate('/dashboard');
     } catch (err) {
       console.error('❌ Auth error:', err);
     }
