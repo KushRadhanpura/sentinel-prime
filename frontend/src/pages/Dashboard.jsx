@@ -213,6 +213,32 @@ const Dashboard = () => {
     return textColors[category] || textColors.Other;
   };
 
+  const getCategoryTitleGradient = (category) => {
+    const gradients = {
+      Social: 'bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent',
+      Work: 'bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 bg-clip-text text-transparent',
+      Finance: 'bg-gradient-to-r from-emerald-400 via-green-400 to-teal-500 bg-clip-text text-transparent',
+      Personal: 'bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-500 bg-clip-text text-transparent',
+      Shopping: 'bg-gradient-to-r from-rose-400 via-pink-400 to-red-500 bg-clip-text text-transparent',
+      Entertainment: 'bg-gradient-to-r from-violet-400 via-purple-400 to-indigo-500 bg-clip-text text-transparent',
+      Other: 'bg-gradient-to-r from-slate-400 via-gray-400 to-zinc-500 bg-clip-text text-transparent',
+    };
+    return gradients[category] || gradients.Other;
+  };
+
+  const getCategoryUsernameColor = (category) => {
+    const colors = {
+      Social: 'text-blue-300/80',
+      Work: 'text-purple-300/80',
+      Finance: 'text-emerald-300/80',
+      Personal: 'text-amber-300/80',
+      Shopping: 'text-rose-300/80',
+      Entertainment: 'text-violet-300/80',
+      Other: 'text-slate-300/80',
+    };
+    return colors[category] || colors.Other;
+  };
+
   if (loading) {
     return (
       <Layout>
@@ -363,13 +389,19 @@ const Dashboard = () => {
           animate={{ opacity: 1, y: 0 }}
           className="flex justify-between items-center"
         >
-          <div>
-            <h1 className="text-4xl font-rajdhani font-bold text-gold mb-2 glow-gold">
-              THE VAULT
-            </h1>
-            <p className="text-silver/70">
-              🔒 Zero-Knowledge Encrypted Storage | AES-256-CBC
-            </p>
+          <div className="flex items-center space-x-4">
+            {/* Profile Picture */}
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center ring-4 ring-cyan-400/30 shadow-lg shadow-cyan-500/50">
+              <User className="w-8 h-8 text-white" />
+            </div>
+            <div>
+              <h1 className="text-4xl font-rajdhani font-bold text-gold mb-2 glow-gold">
+                THE VAULT
+              </h1>
+              <p className="text-silver/70">
+                🔒 Zero-Knowledge Encrypted Storage | AES-256-CBC
+              </p>
+            </div>
           </div>
           <motion.button
             whileHover={{ scale: 1.05 }}
@@ -487,11 +519,11 @@ const Dashboard = () => {
                           <Key className={`w-5 h-5 ${getCategoryIconTextColor(secret.category)}`} />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-rajdhani font-bold text-lg text-gold truncate">
+                          <h3 className={`font-rajdhani font-bold text-lg truncate ${getCategoryTitleGradient(secret.category)}`}>
                             {secret.title}
                           </h3>
                           {secret.username && (
-                            <p className="text-sm text-silver/70 truncate">
+                            <p className={`text-sm truncate ${getCategoryUsernameColor(secret.category)}`}>
                               @{secret.username}
                             </p>
                           )}
