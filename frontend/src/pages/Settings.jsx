@@ -10,7 +10,7 @@ const Settings = () => {
   const { user, logout } = useAuthStore();
   const [settings, setSettings] = useState({
     notifications: true,
-    twoFactor: localStorage.getItem('twoFactorEnabled') === 'true',
+    twoFactor: user?.twoFactorEnabled || false,
     autoLock: true,
     showPasswords: false,
   });

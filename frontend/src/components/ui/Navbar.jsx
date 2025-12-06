@@ -31,9 +31,17 @@ const Navbar = () => {
                 className="flex items-center space-x-2 p-2 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 transition-colors"
                 title="Profile"
               >
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center ring-2 ring-cyan-400/30">
-                  <User className="w-4 h-4 text-white" />
-                </div>
+                {user.profilePicture ? (
+                  <img 
+                    src={user.profilePicture} 
+                    alt="Profile" 
+                    className="w-8 h-8 rounded-full object-cover ring-2 ring-cyan-400/30"
+                  />
+                ) : (
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center ring-2 ring-cyan-400/30">
+                    <User className="w-4 h-4 text-white" />
+                  </div>
+                )}
               </Link>
               <Link
                 to="/settings"

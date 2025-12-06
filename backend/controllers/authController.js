@@ -170,9 +170,51 @@ const deleteAccount = async (req, res) => {
   }
 };
 
+// @desc    Update profile picture
+// @route   PUT /api/auth/profile/picture
+// @access  Private
+const updateProfilePicture = async (req, res) => {
+  try {
+    const { profilePicture } = req.body;
+    
+    if (!profilePicture) {
+      return res.status(400).json({ message: 'Profile picture data required' });
+    }
+    
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { profilePicture },
+      { new: true }
+    ).select('-password');
+    
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Remove profile picture
+// @route   DELETE /api/auth/profile/picture
+// @access  Private
+const removeProfilePicture = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { profilePicture: null },
+      { new: true }
+    ).select('-password');
+    
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
   getUserProfile,
   deleteAccount,
+  updateProfilePicture,
+  removeProfilePicture,
 };

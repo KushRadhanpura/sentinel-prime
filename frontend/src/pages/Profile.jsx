@@ -7,7 +7,7 @@ import Layout from '../components/Layout';
 const Profile = () => {
   const { user } = useAuthStore();
   const [profileImage, setProfileImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
+  const [imagePreview, setImagePreview] = useState(user?.profilePicture || null);
   const [showImageOptions, setShowImageOptions] = useState(false);
 
   const handleImageUpload = (e) => {
@@ -27,21 +27,62 @@ const Profile = () => {
       
       setProfileImage(file);
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
+      reader.onloadend = async () => {
+        const base64Image = reader.result;
+        setImagePreview(base64Image);
         setShowImageOptions(false);
-        // Show success message
-        alert('✅ Profile picture updated!');
+        
+        // Save to backend
+        try {
+          const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://sentinel-prime-1a28.onrender.com'}/api/auth/profile/picture`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({ profilePicture: base64Image })
+          });
+          
+          if (response.ok) {
+            const updatedUser = await response.json();
+            // Update user in store
+            useAuthStore.getState().setUser(updatedUser);
+            alert('✅ Profile picture updated!');
+          } else {
+            alert('⚠️ Failed to save profile picture');
+          }
+        } catch (error) {
+          console.error('Error saving profile picture:', error);
+          alert('⚠️ Failed to save profile picture');
+        }
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleRemoveImage = () => {
-    setProfileImage(null);
-    setImagePreview(null);
-    setShowImageOptions(false);
-    alert('✅ Profile picture removed');
+  const handleRemoveImage = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://sentinel-prime-1a28.onrender.com'}/api/auth/profile/picture`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      
+      if (response.ok) {
+        const updatedUser = await response.json();
+        useAuthStore.getState().setUser(updatedUser);
+        setProfileImage(null);
+        setImagePreview(null);
+        setShowImageOptions(false);
+        alert('✅ Profile picture removed');
+      } else {
+        alert('⚠️ Failed to remove profile picture');
+      }
+    } catch (error) {
+      console.error('Error removing profile picture:', error);
+      alert('⚠️ Failed to remove profile picture');
+    }
   };
 
   return (

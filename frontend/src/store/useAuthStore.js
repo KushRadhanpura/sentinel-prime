@@ -98,6 +98,11 @@ const useAuthStore = create((set, get) => ({
     set({ user: null, token: null, isAuthenticated: false, error: null });
   },
 
+  // Set user
+  setUser: (user) => {
+    set({ user });
+  },
+
   // Load user from token
   loadUser: async () => {
     const token = get().token || localStorage.getItem('token');
